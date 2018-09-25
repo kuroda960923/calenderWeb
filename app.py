@@ -1,5 +1,17 @@
-from bottle import route, run, get, static_file,template,request,redirect
+from bottle import route, run, get, static_file,template,request,redirect,auth_basic
 import sqlite3
+
+#Basic Authentication
+USERNAME = "clearsys"
+PASSWORD = "12345"
+
+def check(username, password):
+    u"""
+    BASIC認証のユーザ名とパスワードをチェック
+    @bottle.auth_basic(check)で適用
+    """
+    return username == USERNAME and password == PASSWORD
+
 
 @get('/static/css/<filePath:path>')
 def index(filePath):
@@ -10,6 +22,7 @@ def index():
     return "<head><link rel = 'stylesheet' href = '/static/css/style.css'></head><h1>Welcome to Python</h1>"
 
 @route("/top")
+@auth_basic(check)
 def top():
     return template("top_tmpl")
 
